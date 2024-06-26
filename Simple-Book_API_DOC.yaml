@@ -44,8 +44,8 @@ paths:
     get:
       tags:
         - Books
-      summary: Gets the list of books or book
-      description: Returns a list of books or book
+      summary: Gets the list of books
+      description: Returns a list of books
       operationId: getBooks
       responses:
         '200':
@@ -102,7 +102,6 @@ paths:
       description: Allows you to submit a new order
       operationId: newOrder
       requestBody:
-        description: st
         content:
           application/json:
             schema:
@@ -110,7 +109,7 @@ paths:
         required: true
       responses:
         '200':
-          description: created
+          description: Created Successfully
           content:
             application/json:
               schema:
