@@ -1,0 +1,260 @@
+openapi: 3.0.3
+info:
+  title: Swagger Simple-Books - OpenAPI 3.0
+  description: |-
+    This is a sample Pet Store Server based on the OpenAPI 3.0 specification.  You can find out more about
+    Swagger at [https://swagger.io](https://swagger.io). In the third iteration of the pet store, we've switched to the design first approach!
+    You can now help us improve the API whether it's by making changes to the definition itself or to the code.
+    That way, with time, we can improve the API in general, and expose some of the new features in OAS3.
+
+    _If you're looking for the Swagger 2.0/OAS 2.0 version of Petstore, then click [here](https://editor.swagger.io/?url=https://petstore.swagger.io/v2/swagger.yaml). Alternatively, you can load via the `Edit > Load Petstore OAS 2.0` menu option!_
+    
+    Some useful links:
+    - [The Pet Store repository](https://github.com/swagger-api/swagger-petstore)
+    - [The source API definition for the Pet Store](https://github.com/swagger-api/swagger-petstore/blob/master/src/main/resources/openapi.yaml)
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: https://petstore3.swagger.io/api/v3
+  
+tags:
+  - name: Books
+    description: Everything about books
+    externalDocs:
+      description: Find out more
+      url: http://swagger.io
+  - name: store
+    description: Access to Books orders
+    externalDocs:
+      description: Find out more about our Books
+      url: http://swagger.io
+  - name: user
+    description: Operations about user
+    
+paths:
+  /books:
+    get:
+      tags:
+        - Books
+      summary: Gets the list of books or book
+      description: Returns a list of books or book
+      operationId: getBooks
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                    $ref: '#/components/schemas/Books'
+        # '400':
+        #   description: Invalid ID supplied
+        # '404':
+        #   description: Book not found
+        # '422':
+        #   description: Validation exception
+          
+  /books/{books}:
+    get:
+      tags:
+        - Books
+      summary: Gets single book
+      description: Retrieve detailed information about a book.
+      operationId: getBook
+      parameters:
+        - name: books
+          in: path
+          required: true
+          schema:
+            type: string
+            description: ID of the book to get
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                    $ref: '#/components/schemas/BookInfo'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Book not found
+        '422':
+          description: Validation exception
+      
+    
+  /orders:
+    post:
+      tags:
+        - order
+      summary: Submit a new order
+      description: Allows you to submit a new order
+      operationId: newOrder
+      requestBody:
+        description: st
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Orders'
+        required: true
+      responses:
+        '200':
+          description: created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Orders'          
+        '400':
+          description: Invalid or missing bookId.
+        '422':
+          description: Validation exception
+          
+           
+          
+  /orders/{orderID}:
+    patch:
+      tags:
+        - order
+      summary: Update order by ID
+      description: Allows to update customer name of an order
+      parameters:
+        - name: orderID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the order to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customerName:
+                  type: string
+                  example: John
+              # $ref: '#/components/schemas/Orders'
+        description: sefsgs
+        
+      responses:
+        '200':
+          description: updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Orders'          
+        '400':
+          description: Invalid.
+        '422':
+          description: Validation exception
+      
+      
+      
+    delete:
+      tags:
+        - order
+      summary: Delete order by ID
+      description: allows deleting of an order by ID
+      parameters:
+        - name: orderID
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID of the order to Delete
+      responses:
+        '204':
+          description: The order gets deleted successfully
+  
+  
+          
+components:
+  schemas:
+    Orders:
+      required:
+        - Bookid
+        - CustomerName
+      type: object
+      properties:
+        Bookid:
+          type: integer
+          format: int64
+          example: 10
+        CustomerName:
+          type: string
+          example: john
+          
+    Books:
+      required:
+        - id
+        - name
+      type: object
+      properties:
+        Id:
+          type: integer
+          format: int64
+          example: 100
+        Name:
+          type: string
+          example: ikigai
+        type:
+          type: string
+          enum: 
+            - Fiction
+            - Non Fiction
+          
+        available:
+          type: boolean
+          
+    BookInfo:
+      # required:
+      #   -id
+      #   -name
+      type: object
+      properties:
+        Id:
+          type: integer
+          format: int64
+          example: 100
+        Name:
+          type: string
+          example: ikigai
+        Author:
+          type: string
+          example: Hector Garcia
+        Type:
+          type: string
+          enum:
+            - Fiction
+            - Non Fiction
+        Price:
+          type: integer
+          example: 16.2
+        Current-Stock:
+          type: integer
+          example: 987
+        available:
+          type: boolean
+        
+      
+          
+          
+          
+          
+  
+        
+    
+
+    
