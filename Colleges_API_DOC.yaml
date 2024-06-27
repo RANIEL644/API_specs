@@ -1,0 +1,337 @@
+openapi: 3.0.3
+info:
+  title: Colleges - OpenAPI 3.0
+  description: |-
+    Our API offers comprehensive functionalities to streamline the management of college information. Developers can leverage these capabilities to efficiently retrieve, update, and delete college records as needed. Key features include:
+
+    Retrieve Colleges: Access a list of all colleges with detailed information such as names, locations, websites, programs offered, and degrees available.
+
+    Delete Colleges in Bulk: Efficiently delete multiple colleges by specifying their IDs in a single request, enhancing data management operations.
+
+    Find College by ID: Retrieve specific details of a college based on its unique identifier, ensuring precise data retrieval for detailed analysis or display.
+
+    Update Colleges in Bulk: Seamlessly update multiple colleges with new information, facilitating batch updates across various attributes like names and locations.
+
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+externalDocs:
+  description: Find out more
+  url: http://swagger.io
+servers:
+  - url: https://api.collegedatahub.com/v1
+  
+    
+paths:
+  /colleges:
+    get:
+      tags:
+        - Colleges
+      summary: Get a list of all colleges
+      description: Returns a list of Colleges
+      operationId: getCollege
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CollegeList'
+                  
+  /colleges/bulk-delete:
+    post:
+      tags:
+        - Colleges
+      summary: Bulk delete colleges
+      description: Deletes multiple colleges based on their IDs
+      operationId: bulkDeleteColleges
+      requestBody:
+        description: A list of college IDs to delete
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: integer
+                example: 
+                  - "1" 
+                  - "5"
+                  
+                  
+      responses:
+        '200':
+          description: Successful deletion
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deleted:
+                    type: array
+                    items:
+                      type: string
+                    example: ["1", "5"]
+                  
+        '400':
+          description: Invalid input
+        '404':
+          description: Some colleges not found    
+                  
+  /colleges/{collegeId}:              
+    get:
+      tags:
+        - Colleges
+      summary: Find College by ID
+      description: Returns a single college
+      operationId: getCollegeId
+      parameters:
+        - name: collegeId
+          in: path
+          required: true
+          schema:
+            type: string
+            description: ID of the college to get 
+      responses:
+        '200':
+          description: Successfull operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Colleges'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: College not found
+          
+    delete:
+      tags:
+        - Colleges
+      summary: deletes a College
+      description: delete a college
+      operationId: deleteCollege
+      parameters:
+        - name: api_key
+          in: header
+          description: ''
+          required: false
+          schema:
+            type: string
+        - name: collegeId
+          in: path
+          description: College id to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '400':
+          description: Invalid College value
+      # security:
+        # - College_auth:
+        #     - write:colleges
+        #     - read:colleges
+    put:
+      tags:
+        - Colleges
+      summary: edits a College
+      description: edit a College
+      operationId: EditCollege
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Colleges'
+      parameters:
+        - name: collegeId
+          required: true
+          in: path
+          description: id of the college to be edited
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 	Successful operation
+        '400':
+          description: Invalid ID supplied
+          
+          
+    patch:
+      tags:
+        - Colleges
+      summary: edits a College
+      description: edit a College
+      operationId: EditCollege
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollegePatch'
+              
+      parameters:
+        - name: collegeId
+          required: true
+          in: path
+          description: id of the college to be edited
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: College updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollegePatched'
+                
+  /colleges/bulk-update:
+    post:
+      tags:
+        - Colleges
+      summary: Bulk update colleges
+      description: Updates multiple colleges based on provided data
+      operationId: bulkUpdateColleges
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CollegeUpdate'
+      responses:
+        '200':
+          description: Successful update
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  updated:
+                    type: array
+                    items:
+                      type: string
+                    example: ["123", "456"]
+                  failed:
+                    type: array
+                    items:
+                      type: string
+                    example: ["789"]
+        '400':
+          description: Invalid input
+        '404':
+          description: Some colleges not found
+
+
+components:
+  schemas:
+    Colleges:
+      type: object
+      properties:
+        Id:
+          type: integer
+          format: int64
+          example: 1
+        Name:
+          type: string
+          example: Goa College of Engineering 
+        Location:
+          type: string
+          example: Farmagudi - Goa 
+        Website:
+          type: string
+          example: www.gec.ac.in
+        Programs:
+          type: string
+          example: 
+            - Electronics
+            - Computer Science
+            - IT
+            - Mechanic
+        Degree: 
+          type: string
+          example: Bachelor's
+          
+    CollegeList:
+      type: object
+      properties:
+        Id:
+          type: integer
+          format: int64
+          example: 1
+        Name:
+          type: string
+          example: Goa College of Engineering 
+        
+           
+          
+    CollegePatch:
+      type: object
+      properties:
+        Name:
+          type: string
+          example: Goa Engineering College
+          
+    CollegePatched:
+      type: object
+      properties:
+        Id:
+          type: integer
+          format: int64
+          example: 1
+        Name:
+          type: string
+          example: Goa Engineering College
+        location: 
+          type: string
+          example: Farmagudi - Goa 
+        Website:
+          type: string
+          example: www.gec.ac.in
+        Programs:
+          type: string
+          example: 
+            - Electronics
+            - Computer Science
+            - IT
+            - Mechanic
+        Degree: 
+          type: string
+          example: Bachelor's
+          
+    CollegeUpdate:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the college to update
+          example: "123"
+        name:
+          type: string
+          description: New name of the college
+          example: "Updated College Name"
+        location:
+          type: string
+          description: New location of the college
+          example: "Updated Location"
+      required:
+        - id
+  
+  
+      
+          
+          
+          
+          
+  
+        
+    
+
+    
